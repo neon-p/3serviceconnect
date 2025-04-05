@@ -25,6 +25,7 @@
     <section id="contact" class="contact section">
 
       <div class="container" data-aos="fade-up" data-aos-delay="100">
+
         <div class="row">
             <!-- Profile Header -->
             <div class="col-12 mb-4">
@@ -34,27 +35,23 @@
                     </div>
                 </div>
                 <div class="text-center"> 
-                    <h3 class="mt-3 mb-1"><?php echo $user['fname']." ".$user['lname']; ?></h3>
+                    <h3 class="mt-3 mb-1"><?php echo $user['fname'] . " " . $user['lname']; ?></h3>
                     <p class="text-muted mb-3"><?php echo $user['usertype']; ?></p>
+
+                    <!-- Status Indicator -->
+                    <?php if ($user['status'] == 1): ?>
+                        <div class="alert alert-success d-inline-block" role="alert">
+                            <i class="bi bi-check-circle-fill"></i> Verified
+                        </div>
+                    <?php elseif ($user['status'] == 0): ?>
+                        <div class="alert alert-warning d-inline-block" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill"></i> Pending Verification
+                        </div>
+                    <?php endif; ?>
                 </div>
-
-               
-
             </div>
 
             <!-- Main Content -->
-
-            <?php if ($this->session->flashdata('success')): ?>
-                <div class="alert alert-success">
-                    <?php echo $this->session->flashdata('success'); ?>
-                </div>
-            <?php endif; ?>
-
-            <?php if ($this->session->flashdata('error')): ?>
-                <div class="alert alert-danger">
-                    <?php echo $this->session->flashdata('error'); ?>
-                </div>
-            <?php endif; ?>
             <div class="col-12">
                 <div class="card border-0 shadow-sm">
                     <div class="card-body p-0">
@@ -103,7 +100,6 @@
                                                 <label class="form-label">Country:</label>
                                                 <h6 class="mb-1"><?php echo $user['country']; ?></h6>
                                             </div>
-
                                             <?php if ($user['usertype'] == "provider"): ?> 
                                                 <div class="col-md-6">
                                                     <label class="form-label"><b>Provider Visibility:</b></label>
@@ -119,7 +115,6 @@
                                                     </form>
                                                 </div>
                                             <?php endif; ?>
-
                                         </div>
                                     </div> 
                                 </div>

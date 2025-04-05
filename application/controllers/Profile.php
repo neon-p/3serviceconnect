@@ -20,7 +20,7 @@ class Profile extends CI_Controller {
         $data['user'] = $this->User_model->get_user_by_id($user_id);
         $this->load->view('editprofile',$data);
     }
-
+    
     public function update_visibility() {
         // Get the visibility value from the POST request
         $visibility = $this->input->post('visibility_provider') ? 1 : 0;
@@ -44,8 +44,6 @@ class Profile extends CI_Controller {
         }
     }
 
-    
-    
     public function update_profile() {
         if (!$this->session->userdata('logged_in')) {
             redirect('auth/login');
