@@ -56,4 +56,6 @@ $route['translate_uri_dashes'] = FALSE;
 $route['contact'] = 'contact/index';
 
 $route['myprofile'] = 'Profile/myprofile';
-$route['editprofile'] = 'profile/editprofile';
+$route['editprofile'] = 'Profile/editprofile';
+$route['complete_profile'] = 'Profile/complete_profile';
+$route['admin_dashboard'] = 'admin_Dashboard/admin_dashboard';

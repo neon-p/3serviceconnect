@@ -31,7 +31,13 @@
             <div class="col-12 mb-4">
                 <div class="profile-header position-relative mb-4">
                     <div class="position-absolute top-0 end-0 p-3">
-                        <a href="editprofile" class="btn btn-light"><i class="fas fa-edit me-2"></i>Edit Profile</a>
+                        <a href="editprofile" class="btn btn-light"><i class="fas fa-edit me-2"></i>Edit Profile</a><br>
+                        <?php if ($user['status'] == 0): ?>
+                            <a href="complete_profile" class="btn btn-light mt-2"><i class="fas fa-key me-2"></i>Complete Profile</a>
+                            <p class="text-warning mt-2">Your profile is pending admin approval after completion.</p>
+                        <?php elseif ($user['status'] == 2): ?>
+                            <p class="text-warning mt-2">Your profile is under review by the admin. Please wait for approval.</p>
+                        <?php endif; ?>
                     </div>
                 </div>
                 <div class="text-center"> 

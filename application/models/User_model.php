@@ -22,5 +22,16 @@ class User_model extends CI_Model {
         $this->db->where('user_id', $user_id);
         return $this->db->update('users', $data);
     }
+
+    public function get_all_services() {
+        $query = $this->db->get('services'); // Fetch all rows from the 'services' table
+        return $query->result_array(); // Return the result as an array
+    }
+
+    public function get_pending_profiles() {
+        $this->db->where('status', '0'); // Filter by 'pending' status
+        $query = $this->db->get('users'); // Fetch from 'users' table
+        return $query->result_array(); // Return the result as an array of profiles
+    }
 }
 ?>
