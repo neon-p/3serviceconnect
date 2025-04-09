@@ -36,7 +36,10 @@
                             <a href="complete_profile" class="btn btn-light mt-2"><i class="fas fa-key me-2"></i>Complete Profile</a>
                             <p class="text-warning mt-2">Your profile is pending admin approval after completion.</p>
                         <?php elseif ($user['status'] == 2): ?>
-                            <p class="text-warning mt-2">Your profile is under review by the admin. Please wait for approval.</p>
+                            <p class="text-warning mt-2">After approve your profile by the admin you can update your listings.</p>
+                        <?php elseif ($user['status'] == 1): ?>
+                                <a href="update_listings" class="btn btn-light mt-2"><i class="fas fa-key me-2"></i>Update_listing</a>
+                                <p class="text-warning mt-2">Your profile is approve by the admin. Please update your listings.</p>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -116,6 +119,21 @@
                                                             <label class="form-check-label" for="visibilityToggle">
                                                                 <?php echo ($user['visibility_provider'] == 1) ? 'Public' : 'Private'; ?>
                                                             </label>
+                                                        </div>
+                                                        <button type="submit" class="btn btn-primary mt-2">Save</button>
+                                                    </form>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label"><b>Update Availability</b></label>
+                                                    <form method="POST" action="<?php echo base_url('Profile/update_availability'); ?>">
+                                                        <div class="col-md-6">
+                                                            <label for="availability" class="form-label">Availability</label>
+                                                            <select class="form-control" id="availability" name="availability" required>
+                                                                <option value="">Select Availability</option>
+                                                                <option value="Morning">Morning</option>
+                                                                <option value="Evening">Evening</option>
+                                                                <option value="Night">Night</option>
+                                                            </select>
                                                         </div>
                                                         <button type="submit" class="btn btn-primary mt-2">Save</button>
                                                     </form>

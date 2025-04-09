@@ -29,7 +29,7 @@ class User_model extends CI_Model {
     }
 
     public function get_pending_profiles() {
-        $this->db->where('status', '0'); // Filter by 'pending' status
+        $this->db->where('status', '2'); // Filter by 'pending' status
         $query = $this->db->get('users'); // Fetch from 'users' table
         return $query->result_array(); // Return the result as an array of profiles
     }

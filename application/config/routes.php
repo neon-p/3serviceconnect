@@ -58,4 +58,5 @@ $route['contact'] = 'contact/index';
 $route['myprofile'] = 'Profile/myprofile';
 $route['editprofile'] = 'Profile/editprofile';
 $route['complete_profile'] = 'Profile/complete_profile';
+$route['update_listings'] = 'Profile/update_listings';
 // $route['admin_dashboard'] = 'admin_Dashboard/admin_dashboard';

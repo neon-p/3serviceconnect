@@ -21,77 +21,34 @@ class Profile extends CI_Controller {
         $this->load->view('editprofile',$data);
     }
 
-    public function complete_profile() {
-        $user_id = $this->session->userdata('user_id');
-    
-        // Fetch all services from the services table
+    public function update_listings() {
+        $user_id = $this->session->userdata('user_id'); 
         $data['services'] = $this->User_model->get_all_services();
-    
-        // Load the complete_profile view
-        $this->load->view('complete_profile', $data);
+        $this->load->view('update_listings',$data);
     }
 
-    public function save_complete_profile() {
-        $user_id = $this->session->userdata('user_id');
-    
-        // Form Validation Rules
-        // $this->form_validation->set_rules('service_id', 'Service', 'required');
-        // $this->form_validation->set_rules('hourly_rate', 'Hourly Rate', 'required|numeric');
-        // $this->form_validation->set_rules('availability', 'Availability', 'required');
-        // $this->form_validation->set_rules('years_of_experience', 'Years of Experience', 'required');
-
-        // Handle file uploads
-        $config['upload_path'] = '3serviceconnect/uploads'; // Directory to store uploaded files
-        $config['allowed_types'] = 'pdf|doc|docx|jpg|png'; // Allowed file types
-        $config['max_size'] = 2048; // Max file size in KB (2MB)
-
-        $this->load->library('upload', $config);
-
-        // Upload certification file
-        $certification_file_path = '';
-        if (!empty($_FILES['certification_file']['name'])) {
-            if ($this->upload->do_upload('certification_file')) {
-                $certification_file_path = 'uploads/' . $this->upload->data('file_name');
-            } else {
-                $this->session->set_flashdata('error', $this->upload->display_errors());
-                redirect('complete_profile');
-            }
-        }
-
-        // Upload past projects file
-        $past_projects_file_path = '';
-        if (!empty($_FILES['past_projects_file']['name'])) {
-            if ($this->upload->do_upload('past_projects_file')) {
-                $past_projects_file_path = 'uploads/' . $this->upload->data('file_name');
-            } else {
-                $this->session->set_flashdata('error', $this->upload->display_errors());
-                redirect('complete_profile');
-            }
-        }
+    public function save_update_listings() {
+        $user_id = $this->session->userdata('user_id'); 
+        $this->form_validation->set_rules('service_id', 'Service', 'required');
+        $this->form_validation->set_rules('hourly_rate', 'Hourly Rate', 'required|numeric');
+        $this->form_validation->set_rules('availability', 'Availability'| 'required');
 
         if ($this->form_validation->run() == FALSE) {
             // Validation failed, redirect back with error message
             $this->session->set_flashdata('error', validation_errors());
-            redirect('complete_profile');
+            redirect('update_listings');
         } else {
-            $availability = $this->input->post('availability'); // This will be an array
-            $availability_string = implode(', ', $availability); // Convert array to a comma-separated string
-
             // Prepare Data for Update
             $provider_data = array(
                 'user_id' => $user_id,
                 'service_id' => $this->input->post('service_id'),
                 'hourly_rate' => $this->input->post('hourly_rate'),
-                'availability' => $availability_string,
-                'certification' => $certification_file_path, // Save certification file path
-                'years_of_experience' => $this->input->post('years_of_experience'),
-                'past_projects' => $past_projects_file_path, // Save past projects file path
-                'rating' => 0, // Default rating
-                'bookings' => 0, // Default bookings
+                'availability' => $this->input->post('availability'),
+                'rating' => 0,
+                'bookings' => 0,
             );
-    
-            
-            // Insert or update provider details
+
+            // Update Provider Details
             $this->db->where('user_id', $user_id);
             $existing_provider = $this->db->get('provider_details')->row_array();
 
@@ -104,18 +61,117 @@ class Profile extends CI_Controller {
                 $this->db->insert('provider_details', $provider_data);
             }
 
+            // Redirect with success message
+            $this->session->set_flashdata('success', 'Listing updated successfully!');
+            redirect('myprofile');
+        }
+    }
+
+    public function complete_profile() {
+        $user_id = $this->session->userdata('user_id');
+        // Load the complete_profile view
+        $this->load->view('complete_profile', $user_id);
+    }
+
+    public function save_complete_profile() {
+        $user_id = $this->session->userdata('user_id');
+
+        $this->form_validation->set_rules('certification_file', 'Certification', 'required');
+        $this->form_validation->set_rules('past_projects_file', 'Past Project', 'required');
+        $this->form_validation->set_rules('years_of_experience', 'Years of experience'| 'required');
+
+        // Handle file uploads
+        $config['upload_path'] = './uploads/'; // Directory to store uploaded files
+        $config['allowed_types'] = 'pdf|doc|docx|jpg|png'; // Allowed file types
+        $config['max_size'] = 2048; // Max file size in KB (2MB)
+        $config['encrypt_name'] = TRUE; // Encrypt file name to avoid conflicts
+
+        $this->load->library('upload', $config);
+
+        // Upload certification file
+        $certification_file_path = '';
+        if (!empty($_FILES['certification_file']['name'])) {
+            if ($this->upload->do_upload('certification_file')) {
+                $certification_file_path = './uploads/' . $this->upload->data('file_name');
+            } else {
+                $this->session->set_flashdata('error', $this->upload->display_errors());
+                redirect('complete_profile');
+            }
+        }
+
+        // Upload past projects file
+        $past_projects_file_path = '';
+        if (!empty($_FILES['past_projects_file']['name'])) {
+            if ($this->upload->do_upload('past_projects_file')) {
+                $past_projects_file_path = './uploads/' . $this->upload->data('file_name');
+            } else {
+                $this->session->set_flashdata('error', $this->upload->display_errors());
+                redirect('complete_profile');
+            }
+        }
+
+        if ($this->form_validation->run() == FALSE) {
+            // Validation failed, redirect back with error message
+            $this->session->set_flashdata('error', validation_errors());
+            redirect('complete_profile');
+        } else {
+
+            // Prepare Data for Update
+            $provider_data = array(
+                'user_id' => $user_id,
+                'years_of_experience' => $this->input->post('years_of_experience'),
+                'past_project' => $past_projects_file_path, // Save past projects file path
+                'certifications' => $certification_file_path, // Save certification file path
+            );
+    
+            
+            // Insert or update provider details
+            $this->db->where('user_id', $user_id);
+            $existing_provider = $this->db->get('certification')->row_array();
+
+            if ($existing_provider) {
+                // Update existing record
+                $this->db->where('user_id', $user_id);
+                $this->db->update('certification', $provider_data);
+            } else {
+                // Insert new record
+                $this->db->insert('certification', $provider_data);
+            }
+
             // Update `users` table with `status=2`
             $this->db->where('user_id', $user_id);
             $this->db->update('users', array('status' => 2));
 
             // Redirect with success message
-            $this->session->set_flashdata('success', 'Profile completed successfully!');
-            redirect('profile/myprofile');
+            $this->session->set_flashdata('success', 'Document uploaded successfully!');
+            redirect('myprofile');
         }
     }
 
 
+    public function update_availability() {
+        // Get the visibility value from the POST request
+        $availability = $this->input->post('availability');
     
+        // Get the user ID from the session (assuming it's stored in the session)
+        $user_id = $this->session->userdata('user_id');
+    
+        // Check if user ID exists
+        if ($user_id) {
+            // Update the visibility in the database
+            $this->db->where('user_id', $user_id);
+            $this->db->update('provider_details', ['availability' => $availability]);
+    
+            // Redirect back to the profile page with a success message
+            $this->session->set_flashdata('success', 'Availability updated successfully!');
+            redirect('myprofile');
+        } else {
+            // Redirect back with an error message if user ID is not found
+            $this->session->set_flashdata('error', 'Error: User not logged in.');
+            redirect('myprofile');
+        }
+    }
+
     public function update_visibility() {
         // Get the visibility value from the POST request
         $visibility = $this->input->post('visibility_provider') ? 1 : 0;
